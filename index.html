@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="لوحة تحكم بوت ديزكورد عربية بسيطة ومناسبة ل GitHub Pages" />
+    <title>لوحة تحكم البوت</title>
+    <style>
+         :root {
+            --bg: #07111f;
+            --panel: #0f172a;
+            --panel-2: #162033;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --accent: #22c55e;
+            --accent-2: #3b82f6;
+            --danger: #ef4444;
+            --border: #243244;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            font-family: Tahoma, Arial, sans-serif;
+            background: linear-gradient(135deg, var(--bg), #020617);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        
+        .app {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            background: rgba(15, 23, 42, 0.95);
+            border-left: 1px solid var(--border);
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .brand {
+            background: linear-gradient(135deg, var(--accent-2), #8b5cf6);
+            padding: 16px;
+            border-radius: 16px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        
+        .nav-btn {
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--panel-2);
+            color: var(--text);
+            text-align: right;
+            cursor: pointer;
+        }
+        
+        .main {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .topbar,
+        .card,
+        .section {
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+        }
+        
+        .topbar {
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 14px;
+        }
+        
+        .card {
+            padding: 16px;
+        }
+        
+        .card h3 {
+            margin: 0 0 8px;
+            font-size: 15px;
+            color: var(--muted);
+        }
+        
+        .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .section {
+            padding: 18px;
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        
+        label {
+            font-size: 13px;
+            color: var(--muted);
+        }
+        
+        input,
+        textarea,
+        button {
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            padding: 10px 12px;
+            font-size: 14px;
+            background: #020617;
+            color: var(--text);
+        }
+        
+        textarea {
+            min-height: 96px;
+            resize: vertical;
+        }
+        
+        .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            cursor: pointer;
+            font-weight: 700;
+        }
+        
+        .btn.primary {
+            background: var(--accent-2);
+            color: white;
+        }
+        
+        .btn.success {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn.warn {
+            background: #f59e0b;
+            color: #111;
+        }
+        
+        .toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .switch {
+            position: relative;
+            width: 52px;
+            height: 28px;
+            display: inline-block;
+        }
+        
+        .switch input {
+            display: none;
+        }
+        
+        .slider {
+            position: absolute;
+            inset: 0;
+            background: #475569;
+            border-radius: 999px;
+            cursor: pointer;
+        }
+        
+        .slider::before {
+            content: "";
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            left: 3px;
+            top: 3px;
+            transition: .2s;
+        }
+        
+        .switch input:checked+.slider {
+            background: var(--accent);
+        }
+        
+        .switch input:checked+.slider::before {
+            transform: translateX(24px);
+        }
+        
+        .small {
+            color: var(--muted);
+            font-size: 12px;
+        }
+        
+        @media (max-width: 900px) {
+            .app {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">لوحة تحكم البوت</div>
+            <button class="nav-btn" data-target="overview">📊 نظرة عامة</button>
+            <button class="nav-btn" data-target="settings">⚙️ الإعدادات</button>
+            <button class="nav-btn" data-target="tickets">🎫 التذاكر</button>
+            <button class="nav-btn" data-target="export">📦 التصدير</button>
+        </aside>
+
+        <main class="main">
+            <div class="topbar">
+                <div>
+                    <h2 style="margin:0">لوحة التحكم</h2>
+                    <div class="small">واجهة عربية احترافية ومناسبة للرفع على GitHub</div>
+                </div>
+                <div class="row">
+                    <button class="btn success" onclick="saveState()">💾 حفظ</button>
+                    <button class="btn warn" onclick="resetState()">↺ افتراضي</button>
+                </div>
+            </div>
+
+            <div class="cards">
+                <div class="card">
+                    <h3>حالة البوت</h3>
+                    <div class="value" id="status">تشغيل</div>
+                </div>
+                <div class="card">
+                    <h3>المنصات</h3>
+                    <div class="value" id="platforms">3</div>
+                </div>
+                <div class="card">
+                    <h3>الإعدادات</h3>
+                    <div class="value" id="settingsCount">6</div>
+                </div>
+                <div class="card">
+                    <h3>آخر حفظ</h3>
+                    <div class="value" id="saved">—</div>
+                </div>
+            </div>
+
+            <section class="section active" id="overview">
+                <h3>نظرة عامة</h3>
+                <div class="grid">
+                    <div class="field"><label>اسم البوت</label><input id="botName" /></div>
+                    <div class="field"><label>البادئة</label><input id="prefix" /></div>
+                </div>
+                <div class="toggle"><span>وضع الصيانة</span><label class="switch"><input type="checkbox" id="maintenance" /><span class="slider"></span></label></div>
+                <div class="toggle"><span>الرد التلقائي</span><label class="switch"><input type="checkbox" id="autoReply" checked /><span class="slider"></span></label></div>
+            </section>
+
+            <section class="section" id="settings">
+                <h3>الإعدادات</h3>
+                <div class="field"><label>رسالة الترحيب</label><textarea id="welcomeMessage"></textarea></div>
+                <div class="field"><label>رابط صورة التذاكر</label><input id="ticketImage" /></div>
+                <div class="field"><label>قنوات السجل</label><input id="logChannels" /></div>
+            </section>
+
+            <section class="section" id="tickets">
+                <h3>إعدادات التذاكر</h3>
+                <div class="field"><label>نوع الدعم</label><input id="supportType" /></div>
+                <div class="field"><label>نوع التصميم</label><input id="designType" /></div>
+                <div class="field"><label>نوع البرمجة</label><input id="programType" /></div>
+            </section>
+
+            <section class="section" id="export">
+                <h3>التصدير</h3>
+                <div class="row" style="margin-bottom:12px;">
+                    <button class="btn primary" onclick="exportData()">⬇️ تصدير JSON</button>
+                    <button class="btn warn" onclick="copyPreview()">📋 نسخ البيانات</button>
+                </div>
+                <textarea id="exportBox" style="width:100%"></textarea>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const state = {
+            botName: 'Ticket Bot',
+            prefix: '!',
+            maintenance: false,
+            autoReply: true,
+            welcomeMessage: 'مرحباً، كيف أستطيع مساعدتك؟',
+            ticketImage: '',
+            logChannels: 'logs,mod-logs',
+            supportType: 'دعم فني',
+            designType: 'تصميم',
+            programType: 'برمجة'
+        };
+
+        function loadState() {
+            try {
+                const saved = localStorage.getItem('githubDashboardState');
+                return saved ? JSON.parse(saved) : state;
+            } catch {
+                return state;
+            }
+        }
+
+        function saveState() {
+            const data = collectData();
+            localStorage.setItem('githubDashboardState', JSON.stringify(data));
+            document.getElementById('saved').textContent = new Date().toLocaleString('ar-EG');
+            alert('تم حفظ الإعدادات بنجاح');
+        }
+
+        function resetState() {
+            if (confirm('هل تريد إعادة تعيين اللوحة؟')) {
+                localStorage.removeItem('githubDashboardState');
+                render();
+            }
+        }
+
+        function collectData() {
+            return {
+                botName: document.getElementById('botName').value,
+                prefix: document.getElementById('prefix').value,
+                maintenance: document.getElementById('maintenance').checked,
+                autoReply: document.getElementById('autoReply').checked,
+                welcomeMessage: document.getElementById('welcomeMessage').value,
+                ticketImage: document.getElementById('ticketImage').value,
+                logChannels: document.getElementById('logChannels').value,
+                supportType: document.getElementById('supportType').value,
+                designType: document.getElementById('designType').value,
+                programType: document.getElementById('programType').value
+            };
+        }
+
+        function exportData() {
+            document.getElementById('exportBox').value = JSON.stringify(collectData(), null, 2);
+        }
+
+        function copyPreview() {
+            const box = document.getElementById('exportBox');
+            box.select();
+            navigator.clipboard.writeText(box.value);
+            alert('تم نسخ البيانات');
+        }
+
+        function render() {
+            const data = loadState();
+            document.getElementById('botName').value = data.botName || '';
+            document.getElementById('prefix').value = data.prefix || '';
+            document.getElementById('maintenance').checked = !!data.maintenance;
+            document.getElementById('autoReply').checked = !!data.autoReply;
+            document.getElementById('welcomeMessage').value = data.welcomeMessage || '';
+            document.getElementById('ticketImage').value = data.ticketImage || '';
+            document.getElementById('logChannels').value = data.logChannels || '';
+            document.getElementById('supportType').value = data.supportType || '';
+            document.getElementById('designType').value = data.designType || '';
+            document.getElementById('programType').value = data.programType || '';
+
+            document.getElementById('status').textContent = data.maintenance ? 'متوقف' : 'تشغيل';
+            document.getElementById('platforms').textContent = '3';
+            document.getElementById('settingsCount').textContent = '6';
+            document.getElementById('saved').textContent = localStorage.getItem('githubDashboardState') ? 'تم الحفظ' : 'لم يتم الحفظ';
+            document.getElementById('exportBox').value = JSON.stringify(data, null, 2);
+        }
+
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+                document.getElementById(btn.dataset.target).classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('input, textarea').forEach(el => {
+            el.addEventListener('input', () => {
+                const data = collectData();
+                localStorage.setItem('githubDashboardState', JSON.stringify(data));
+                render();
+            });
+        });
+
+        document.querySelectorAll('input[type="checkbox"]').forEach(el => {
+            el.addEventListener('change', () => {
+                const data = collectData();
+                localStorage.setItem('githubDashboardState', JSON.stringify(data));
+                render();
+            });
+        });
+
+        render();
+    </script>
+</body>
+
+</html>
